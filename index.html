@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="ember-animated-outlet.cs">
+<link rel="stylesheet" href="ember-animated-outlet.css">
 
 <script src="handlebars.js"></script>
 <script src="jquery-2.0.1.js"></script>
@@ -8,17 +8,41 @@
 <script>
 
   App = Ember.Application.create();
+
   App.Router.map(function() {
+    this.resource('message');
     this.resource('hi');
   });
 
+  App.ApplicationRoute = Ember.Route.extend({
+    events: {
+      sayHi: function() {
+        this.transitionToAnimated('hi', {main: 'slideLeft'});
+      },
+      backToNormal: function() {
+        this.transitionToAnimated('index', {main: 'slideRight'});
+      }
+    }
+  });
+
+  App.IndexController = Ember.Controller.extend({
+    message: 'say hi'
+  });
+
+  App.IndexView = Ember.View.extend();
+  App.HiView = Ember.View.extend();
+
+</script>
+
+<script type="text/x-handlebars" data-template-name='application'>
+  {{animatedOutlet name="main"}}
 </script>
 
 <script type="text/x-handlebars" data-template-name='index'>
-  <p>{{#linkTo hi}}say hi{{/linkTo}}</p>
+  <p><a {{action sayHi}}> {{message}}</a></p>
 </script>
 
 <script type="text/x-handlebars" data-template-name='hi'>
-  hello world!
+  <p><a {{action backToNormal}}>hello world!</a></p>
 </script>
 
